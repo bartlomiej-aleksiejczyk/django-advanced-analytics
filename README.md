@@ -1,3 +1,9 @@
+
+django-admin startproject mysite djangotutorial
+
+# Start a new app
+python manage.py startapp polls
+
 # Create migration files from model changes
 python manage.py makemigrations
 

@@ -8,3 +8,7 @@ wheels/
 db.sqlite3
 # Virtual environments
 .venv
+static/*
+!static/.gitkeep
+media/*
+!media/.gitkeep

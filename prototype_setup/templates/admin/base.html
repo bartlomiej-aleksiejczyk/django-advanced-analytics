@@ -1,0 +1,13 @@
+{% extends "admin/base.html" %}
+{% load admin_userlinks %}
+{% load i18n %}
+
+{% block userlinks %}
+    {% admin_userlinks as links %}
+    {% for label, url in links %}
+        <a href="{{ url }}" target="_blank">
+            {{ label }}
+        </a> /
+    {% endfor %}
+    {{ block.super }}
+{% endblock %}
