@@ -183,12 +183,12 @@ LOGGING = {
         },
         "django_file": {
             "class": "logging.FileHandler",
-            "filename": LOG_DIR / "django.log",
+            "filename": os.path.join(LOG_DIR, "django.log"),
             "formatter": "verbose",
         },
         "request_file": {
             "class": "logging.FileHandler",
-            "filename": LOG_DIR / "requests.log",
+            "filename": os.path.join(LOG_DIR, "requests.log"),
             "formatter": "verbose",
         },
     },
