@@ -159,3 +159,50 @@ Q_CLUSTER = {
     'bulk': 10,
     'orm': 'default'
 }
+
+LOG_DIR = BASE_DIR / 'var' / 'logs'
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "verbose": {
+            "format": "[{levelname}] {asctime} {name} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "[{levelname}] {message}",
+            "style": "{",
+        },
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "django_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "django.log",
+            "formatter": "verbose",
+        },
+        "request_file": {
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "requests.log",
+            "formatter": "verbose",
+        },
+    },
+
+    "root": {
+        "handlers": ["console", "django_file"],
+        "level": "INFO",
+    },
+
+    "loggers": {
+        "django.request": {
+            "handlers": ["request_file"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}

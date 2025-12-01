@@ -4,11 +4,15 @@ services:
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
-             gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+             gunicorn core.wsgi:application 
+             --access-logfile /app/var/logs/gunicorn_access.log
+             --error-logfile /app/var/logs/gunicorn_error.log
+             --bind 0.0.0.0:8000"
     volumes:
       - ./var/db:/app/var/db
       - ./var/static:/app/var/static
       - ./var/media:/app/var/media
+      - ./var/logs:/app/var/logs
     networks:
       - default
     healthcheck:
@@ -30,6 +34,7 @@ services:
       - ./var/db:/app/var/db
       - ./var/static:/app/var/static
       - ./var/media:/app/var/media
+      - ./var/logs:/app/var/logs
     depends_on:
           web:
             condition: service_healthy
@@ -46,8 +51,9 @@ services:
       - web
     volumes:
       - ./nginx/django.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./static:/app/static:ro
-      - ./media:/app/media:ro
+      - ./var/static:/app/var/static
+      - ./var/media:/app/var/media
+      - ./var/logs:/app/var/logs
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
@@ -59,10 +65,8 @@ services:
     networks:
       - default
       - proxy
-    ports:
-      - 82:80
 
 networks:
   default:
   proxy:
-    # external: true
+    external: true

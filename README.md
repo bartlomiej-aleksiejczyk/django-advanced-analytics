@@ -21,3 +21,6 @@ python manage.py collectstatic
 
 # Run a worker
 python manage.py qcluster
+
+# Docker console
+docker compose exec -it web "sh" 
