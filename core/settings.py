@@ -10,22 +10,32 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+RUNSERVER = "runserver" in sys.argv
+
+if RUNSERVER:
+    # -----------------------------
+    # DEV SETTINGS (runserver only)
+    # -----------------------------
+    DEBUG = True
+    SECRET_KEY = "django-insecure-5l!6pv4po0p$oi2oq4piu=am_i(6)2+x10(ajw%5l=2-y1vcv)"
+    ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5l!6pv4po0p$oi2oq4piu=am_i(6)2+x10(ajw%5l=2-y1vcv)'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", False) == "True"
 
-ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -81,7 +91,7 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'var' / 'db' /'db.sqlite3',
     }
 }
 
@@ -134,11 +144,11 @@ ADMIN_CUSTOM_USERLINKS = [
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "var", "media")
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-
+STATIC_ROOT = os.path.join(BASE_DIR, "var", "static")
 
 Q_CLUSTER = {
     'name': 'DjangORM',

@@ -18,3 +18,6 @@ python manage.py createsuperuser
 
 # Collect static files into STATIC_ROOT (useful for production)
 python manage.py collectstatic
+
+# Run a worker
+python manage.py qcluster

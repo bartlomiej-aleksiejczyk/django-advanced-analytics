@@ -1,0 +1,68 @@
+services:
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - ./var/db:/app/var/db
+      - ./var/static:/app/var/static
+      - ./var/media:/app/var/media
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    environment:
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+
+  worker:
+    build: .
+    command: >
+      sh -c "python manage.py qcluster"
+    volumes:
+      - ./var/db:/app/var/db
+      - ./var/static:/app/var/static
+      - ./var/media:/app/var/media
+    depends_on:
+          web:
+            condition: service_healthy
+    networks:
+      - default
+    environment:
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/django.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/app/static:ro
+      - ./media:/app/media:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+
+      - "traefik.http.routers.hyperadmin.rule=PathPrefix(`/hyperadmin`)"
+      - "traefik.http.routers.hyperadmin.entrypoints=websecure"
+      - "traefik.http.routers.hyperadmin.tls=true"
+      - "traefik.http.services.hyperadmin.loadbalancer.server.port=80"
+    networks:
+      - default
+      - proxy
+    ports:
+      - 82:80
+
+networks:
+  default:
+  proxy:
+    # external: true
