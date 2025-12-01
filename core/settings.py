@@ -141,14 +141,14 @@ ADMIN_CUSTOM_USERLINKS = [
     {"label": "Transactions", "url_name": "finances:transaction_list"},
 ]
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "var", "media")
+MEDIA_ROOT = os.path.join(ROOT_DIR, "var", "media")
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "var", "static")
+STATIC_ROOT = os.path.join(ROOT_DIR, "var", "static")
 
 Q_CLUSTER = {
     'name': 'DjangORM',
