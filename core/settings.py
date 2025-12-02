@@ -206,3 +206,9 @@ LOGGING = {
         },
     },
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host.strip()}"
+    for host in ALLOWED_HOSTS
+    if host.strip()
+]

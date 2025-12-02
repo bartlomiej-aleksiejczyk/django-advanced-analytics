@@ -4,11 +4,7 @@ services:
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
-             gunicorn --bind 0.0.0.0:8000
-             --access-logfile /app/var/logs/gunicorn_access.log
-             --error-logfile /app/var/logs/gunicorn_error.log 
-             core.wsgi:application
-             "
+             gunicorn --bind 0.0.0.0:8000 --access-logfile /app/var/logs/gunicorn_access.log --error-logfile /app/var/logs/gunicorn_error.log core.wsgi:application"
     volumes:
       - ${DJANGO_DB_VOLUME:-hyperadmin_db_data}:/app/var/db
       - ${DJANGO_STATIC_VOLUME:-hyperadmin_static_data}:/app/var/static
