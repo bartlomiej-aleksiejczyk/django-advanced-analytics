@@ -143,10 +143,10 @@ ADMIN_CUSTOM_USERLINKS = [
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-MEDIA_URL = "/media/"
+MEDIA_URL = "/hyperadmin/media/"
 MEDIA_ROOT = os.path.join(ROOT_DIR, "var", "media")
 
-STATIC_URL = "/static/"
+STATIC_URL = "/hyperadmin/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(ROOT_DIR, "var", "static")
 

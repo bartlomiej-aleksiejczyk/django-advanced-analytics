@@ -20,12 +20,14 @@ from django.contrib import admin
 from django.urls import include, path
 from hyperadmin.admin import hyperadmin
 
-urlpatterns = [
+urlpatterns =path('hyperadmin/', include([
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path("admin/", hyperadmin.urls),
     path("", include("common.urls")),
     path("finances/", include("finances.urls", namespace="finances")),
-]
+]))
+
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
