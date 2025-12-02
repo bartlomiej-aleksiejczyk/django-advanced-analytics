@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path(
-        "files/<path:relative_path>/",
+        "files/<path:relative_path>",
         views.protected_media,
         name="protected_media",
     ),

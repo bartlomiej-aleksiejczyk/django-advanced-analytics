@@ -144,7 +144,7 @@ ADMIN_CUSTOM_USERLINKS = [
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-MEDIA_URL = "/hyperadmin/protected-media/"
+MEDIA_URL = "/hyperadmin/files/"
 MEDIA_ROOT = os.path.join(ROOT_DIR, "var", "media")
 
 STATIC_URL = "/hyperadmin/static/"
@@ -212,3 +212,5 @@ CSRF_TRUSTED_ORIGINS = [
     f"https://{host.strip()}"
     for host in ALLOWED_HOSTS
 ]
+
+LOGIN_REDIRECT_URL='/hyperadmin/accounts/profile/'
