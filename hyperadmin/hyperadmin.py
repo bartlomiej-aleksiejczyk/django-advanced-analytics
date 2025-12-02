@@ -1,15 +1,24 @@
 import logging
 from django.contrib.admin import AdminSite
 from django.urls import NoReverseMatch, path, reverse
-from django.template.response import TemplateResponse
 
 logger = logging.getLogger(__name__)
-# TODO: Split clas for parts that should be set externally/cusotmized and non customizable parts
+
+
 class HyperadminSite(AdminSite):
+    """
+    A lightweight extension of Django AdminSite with:
+    - extra views (custom URLs added by apps)
+    - extra modules (sidebar/menus)
+    """
+
     site_header = "Hyperadmin"
     site_title = "Hyperadmin"
 
-    EXTRA_MODULES = [
+    #
+    # --- DEFAULT MODULES (can be overridden or extended) ---
+    #
+    DEFAULT_MODULES = [
         {
             "id": "tools",
             "title": "Tools",
@@ -27,95 +36,107 @@ class HyperadminSite(AdminSite):
         },
     ]
 
+    #
+    # --- CUSTOMIZABLE HOOK STORAGE ---
+    #
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._extra_views = []      # register_view()
+        self._extra_modules = []    # add_module()
+        self._module_overrides = [] # replace_modules()
+
+    # ---------------------------------------------------------
+    #  HOOK #1: EXTRA ADMIN VIEWS (custom URLs)
+    # ---------------------------------------------------------
+
+    def register_view(self, route: str, view, name: str):
+        """
+        Register a custom view accessible under this admin site.
+        """
+        self._extra_views.append(path(route, self.admin_view(view), name=name))
+
+    # Include extra views BEFORE stock admin views.
     def get_urls(self):
-        urls = super().get_urls()
-        my_urls = [
-            path("dashboard/", self.admin_view(self.system_dashboard_view), name="dashboard"),
-        ]
-        return my_urls + urls
+        return self._extra_views + super().get_urls()
 
-    def system_dashboard_view(self, request):
+    # ---------------------------------------------------------
+    #  HOOK #2: SIDEBAR MODULES
+    # ---------------------------------------------------------
 
-        context = dict(
-            self.each_context(request),
-            title="System dashboard",
-            stats={
-                "users": 123,
-                "orders": 456,
-            },
-        )
-        return TemplateResponse(
-            request,
-            "hyperadmin/system_dashboard.html",
-            context,
-        )
-    def each_context(self, request):
-        context = super().each_context(request)
-        context["extra_modules"] = self.get_extra_modules(request)
-        return context
+    def add_module(self, module_dict: dict):
+        """
+        Add a sidebar module *from external apps*.
+        Format:
+            {"id": "...", "title": "...", "items": [{"label": "...", "url_name": "..."}]}
+        """
+        self._extra_modules.append(module_dict)
+
+    def replace_modules(self, modules_list: list):
+        """
+        Completely replace the default module list.
+        (Used by projects that want full control.)
+        """
+        self._module_overrides = modules_list
+
+    # Filter URLs -> absolute URL + skipping missing reverses
+    def _resolve_module_items(self, module, request):
+        items = []
+        module_id = module.get("id")
+
+        for item in module.get("items", []):
+            url_name = item.get("url_name")
+
+            if not url_name:
+                logger.warning(
+                    "[Hyperadmin] item missing url_name (module_id=%r, item=%r, user=%r)",
+                    module_id, item, request.user,
+                )
+                continue
+
+            try:
+                url = reverse(url_name)
+            except NoReverseMatch as exc:
+                logger.warning(
+                    "[Hyperadmin] cannot reverse url_name=%r in module_id=%r: %s",
+                    url_name, module_id, exc,
+                )
+                continue
+
+            items.append({
+                "label": item.get("label", url_name),
+                "url": url,
+            })
+
+        return items
 
     def get_extra_modules(self, request):
-            """
-            Turn EXTRA_MODULES (with url_name) into a list that templates can use:
-            [
-            {
-                "id": "tools",
-                "title": "Tools",
-                "items": [
-                {"label": "System dashboard", "url": "/admin/system-dashboard/"},
-                ...
-                ]
-            },
-            ...
-            ]
-            """
-            modules = []
+        """
+        Final list of modules shown in the sidebar.
+        """
+        # Decide which modules base to use
+        base_modules = (
+            self._module_overrides
+            if self._module_overrides
+            else self.DEFAULT_MODULES
+        )
 
-            for module in self.EXTRA_MODULES:
-                items = []
-                module_id = module.get("id")
+        # Both base and externally added modules
+        combined_modules = base_modules + self._extra_modules
 
-                for item in module.get("items", []):
-                    url_name = item.get("url_name")
+        resolved = []
+        for module in combined_modules:
+            items = self._resolve_module_items(module, request)
+            if items:
+                resolved.append({
+                    "id": module["id"],
+                    "title": module.get("title"),
+                    "items": items,
+                })
 
-                    if not url_name:
-                        logger.warning(
-                            "Hyperadmin extra_modules: item without url_name "
-                            "(module_id=%r, item=%r, user=%r)",
-                            module_id,
-                            item,
-                            getattr(request, "user", None),
-                        )
-                        continue
+        return resolved
 
-                    try:
-                        url = reverse(url_name)
-                    except NoReverseMatch as exc:
-                        logger.warning(
-                            "Hyperadmin extra_modules: could not reverse url_name=%r "
-                            "in module_id=%r (user=%r): %s",
-                            url_name,
-                            module_id,
-                            getattr(request, "user", None),
-                            exc,
-                        )
-                        continue
-
-                    items.append(
-                        {
-                            "label": item.get("label", url_name),
-                            "url": url,
-                        }
-                    )
-
-                if (len(items)) > 0:
-                    modules.append(
-                        {
-                            "id": module_id,
-                            "title": module.get("title"),
-                            "items": items,
-                        }
-                    )
-
-            return modules
-
+    # Inject modules into admin context
+    def each_context(self, request):
+        ctx = super().each_context(request)
+        ctx["extra_modules"] = self.get_extra_modules(request)
+        return ctx
