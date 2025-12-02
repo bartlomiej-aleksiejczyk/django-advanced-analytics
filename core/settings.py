@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_q',
     'django.contrib.admindocs',
     'finances',
+    'notes'
 ]
 
 MIDDLEWARE = [
