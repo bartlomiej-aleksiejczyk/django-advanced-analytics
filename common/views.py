@@ -1,9 +1,9 @@
-from pathlib import Path
 import mimetypes
+from pathlib import Path
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.utils.encoding import smart_str
 from django.views.decorators.http import require_http_methods
 
@@ -34,6 +34,28 @@ def protected_media(request, relative_path: str):
     if content_type is None:
         content_type = "application/octet-stream"
 
+    # --- DEV MODE --------------------------------------------------------
+    # If running Django dev server, serve file bytes directly
+    if settings.DEBUG or getattr(settings, "RUNSERVER", False):
+        # HEAD request \u2192 empty body but same headers
+        if request.method == "HEAD":
+            response = HttpResponse(content_type=content_type)
+            response["Content-Length"] = requested.stat().st_size
+            response["Content-Disposition"] = (
+                f'inline; filename="{smart_str(requested.name)}"'
+            )
+            return response
+
+        # GET request \u2192 send file bytes
+        return FileResponse(
+            open(requested, "rb"),
+            content_type=content_type,
+            as_attachment=False,
+            filename=requested.name,
+        )
+
+    # --- PROD MODE -------------------------------------------------------
+    # Use Nginx X-Accel-Redirect
     internal_path = f"/hyperadmin/protected-media/{rel_for_internal.as_posix()}"
 
     response = HttpResponse(content_type=content_type)

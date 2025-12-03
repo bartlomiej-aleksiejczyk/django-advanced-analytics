@@ -16,34 +16,13 @@ class HyperadminSite(AdminSite):
     site_title = "Hyperadmin"
 
     #
-    # --- DEFAULT MODULES (can be overridden or extended) ---
-    #
-    DEFAULT_MODULES = [
-        {
-            "id": "tools",
-            "title": "Tools",
-            "items": [
-                {"label": "System dashboard", "url_name": "admin:dashboard"},
-                {"label": "Background tasks", "url_name": "admin:django_q_cluster_changelist"},
-            ],
-        },
-        {
-            "id": "reports",
-            "title": "Reports",
-            "items": [
-                {"label": "Finance report", "url_name": "finances:transaction_list"},
-            ],
-        },
-    ]
-
-    #
     # --- CUSTOMIZABLE HOOK STORAGE ---
     #
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._extra_views = []      # register_view()
-        self._extra_modules = []    # add_module()
-        self._module_overrides = [] # replace_modules()
+        self._extra_sidebar_modules = []    # add_module()
+        self._domains = []
 
     # ---------------------------------------------------------
     #  HOOK #1: EXTRA ADMIN VIEWS (custom URLs)
@@ -63,20 +42,16 @@ class HyperadminSite(AdminSite):
     #  HOOK #2: SIDEBAR MODULES
     # ---------------------------------------------------------
 
-    def add_module(self, module_dict: dict):
+    def add_sidebar_modules(self, module_dict: dict):
         """
-        Add a sidebar module *from external apps*.
+        Add a sidebar item *from external apps*.
         Format:
             {"id": "...", "title": "...", "items": [{"label": "...", "url_name": "..."}]}
         """
-        self._extra_modules.append(module_dict)
+        self._extra_sidebar_modules.append(module_dict)
 
-    def replace_modules(self, modules_list: list):
-        """
-        Completely replace the default module list.
-        (Used by projects that want full control.)
-        """
-        self._module_overrides = modules_list
+    def add_domain(self, domain):
+        self._domains.append(domain)
 
     # Filter URLs -> absolute URL + skipping missing reverses
     def _resolve_module_items(self, module, request):
@@ -109,22 +84,12 @@ class HyperadminSite(AdminSite):
 
         return items
 
-    def get_extra_modules(self, request):
+    def get_extra_sidebar_modules(self, request):
         """
         Final list of modules shown in the sidebar.
         """
-        # Decide which modules base to use
-        base_modules = (
-            self._module_overrides
-            if self._module_overrides
-            else self.DEFAULT_MODULES
-        )
-
-        # Both base and externally added modules
-        combined_modules = base_modules + self._extra_modules
-
         resolved = []
-        for module in combined_modules:
+        for module in self._extra_sidebar_modules:
             items = self._resolve_module_items(module, request)
             if items:
                 resolved.append({
@@ -138,5 +103,5 @@ class HyperadminSite(AdminSite):
     # Inject modules into admin context
     def each_context(self, request):
         ctx = super().each_context(request)
-        ctx["extra_modules"] = self.get_extra_modules(request)
+        ctx["extra_modules"] = self.get_extra_sidebar_modules(request)
         return ctx

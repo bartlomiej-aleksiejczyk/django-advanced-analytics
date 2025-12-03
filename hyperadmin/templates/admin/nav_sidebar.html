@@ -1,8 +1,17 @@
 {% load i18n %}
-<button class="sticky toggle-nav-sidebar" id="toggle-nav-sidebar" aria-label="{% translate 'Toggle navigation' %}"></button>
+{% comment %} <button class="sticky toggle-nav-sidebar" id="toggle-nav-sidebar" aria-label="{% translate 'Toggle navigation' %}"></button>
 <nav class="sticky" id="nav-sidebar" aria-label="{% translate 'Sidebar' %}">
-  <input type="search" id="nav-filter"
+  
+</nav> {% endcomment %}
+<div class="stt-primary-sidebar " data-stt-element="sidebar">
+  <input type="search"
+         id="nav-filter"
          placeholder="{% translate 'Start typing to filter…' %}"
          aria-label="{% translate 'Filter navigation items' %}">
-  {% include 'admin/app_list.html' with app_list=available_apps show_changelinks=False %}
-</nav>
+  <div class="stt-primary-sidebar-top">
+    <button data-stt-action="dismiss" class="stt-button"></button>
+  </div>
+  <div id="mrl-nav-sidebar-content">
+    {% include 'admin/app_list.html' with app_list=available_apps show_changelinks=False %}
+  </div>
+</div>

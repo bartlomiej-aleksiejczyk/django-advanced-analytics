@@ -10,3 +10,8 @@ dependencies = [
     "docutils>=0.22.3",
     "gunicorn>=23.0.0",
 ]
+
+[dependency-groups]
+dev = [
+    "djlint>=1.36.4",
+]

@@ -1,0 +1,68 @@
+:root {
+  --color-link: hsl(200, 100%, 30%);
+  --color-link-visited: hsl(234, 50%, 30%);
+  --color-link-hover: hsl(210, 100%, 20%);
+  --color-primary: hsl(200, 35%, 41%);
+  --color-primary-darker: hsl(200, 30%, 32%);
+  --color-primary-lighter: hsl(200, 30%, 55%);
+  --color-secondary: hsl(200, 30%, 87%);
+  --color-secondary-darker: hsl(200, 30%, 71%);
+  --color-secondary-lighter: hsl(200, 30%, 94%);
+  --color-text-primary: hsl(0, 0%, 20%);
+  --color-text-secondary: hsl(0, 0%, 33%);
+  --color-text-on-primary: hsl(0, 0%, 100%);
+  --color-text-on-primary-darker: hsl(0, 0%, 90%);
+  --color-text-on-secondary: hsl(0, 0%, 25%);
+  --color-background: hsl(0, 0%, 100%);
+  --color-background-light-contrast: hsl(0, 0%, 94%);
+  --color-positive-darker: hsl(105, 48%, 64%);
+  --color-positive: hsl(100, 69%, 87%);
+  --color-negative-darker: hsl(0, 57%, 49%);
+  --color-negative: hsl(0, 69%, 87%);
+  --color-warning: hsl(40, 71%, 86%);
+  --color-warning-darker: hsl(36, 58%, 55%);
+  --color-info: hsl(220, 69%, 87%);
+  --color-info-darker: hsl(227, 48%, 64%);
+  --color-help: hsl(260, 69%, 87%);
+  --color-help-darker: hsl(257, 48%, 64%);
+  --color-main-text-area-darker: hsl(0, 0%, 97%);
+  --color-main-text-area: hsl(0, 0%, 100%);
+  --color-main-text: hsl(0, 0%, 0%);
+  --color-overlay: rgba(0, 0, 0, 0.3);
+  --max-container-width: 55rem;
+  --border-radius-medium: 3px;
+  --border-radius-large: 5px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-link: hsl(200, 60%, 50%);
+    --color-link-visited: hsl(234, 50%, 60%);
+    --color-link-hover: hsl(213, 100%, 70%);
+    --color-primary: hsl(200, 30%, 31%);
+    --color-primary-darker: hsl(200, 30%, 25%);
+    --color-primary-lighter: hsl(200, 30%, 47%);
+    --color-secondary: hsl(200, 30%, 40%);
+    --color-secondary-darker: hsl(200, 30%, 29%);
+    --color-secondary-lighter: hsl(200, 30%, 48%);
+    --color-text-primary: hsl(0, 0%, 87%);
+    --color-text-secondary: hsl(0, 0%, 73%);
+    --color-text-on-primary: hsl(0, 0%, 83%);
+    --color-text-on-primary-darker: hsl(0, 0%, 73%);
+    --color-text-on-secondary: hsl(0, 0%, 85%);
+    --color-background: hsl(0, 0%, 19%);
+    --color-background-light-contrast: hsl(0, 0%, 16%);
+    --color-positive-darker: hsl(120, 20%, 50%);
+    --color-positive: hsl(120, 33%, 30%);
+    --color-negative-darker: hsl(0, 20%, 50%);
+    --color-negative: hsl(0, 33%, 30%);
+    --color-warning: hsl(39, 40%, 50%);
+    --color-warning-darker: hsl(34, 50%, 40%);
+    --color-info: hsl(210, 50%, 60%);
+    --color-info-darker: hsl(210, 43%, 47%);
+    --color-help: hsl(250, 25%, 42%);
+    --color-help-darker: hsl(255, 26%, 27%);
+    --color-main-text-area-darker: hsl(0, 0%, 12%);
+    --color-main-text-area: hsl(0, 0%, 15%);
+    --color-main-text: hsl(0, 0%, 100%);
+  }
+}

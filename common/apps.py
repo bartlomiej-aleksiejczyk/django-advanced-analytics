@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
-from hyperadmin.hooks import register_admin_autoreg
+from hyperadmin.hooks import register_admin_autoreg, register_admin_sidebar_modules
 
 
 class CommonConfig(AppConfig):
@@ -12,3 +12,18 @@ class CommonConfig(AppConfig):
         from . import signals
         register_admin_autoreg("auth")
         register_admin_autoreg("django_q")
+        register_admin_sidebar_modules({
+            "id": "reports",
+            "title": "Reports",
+            "items": [
+                {"label": "Finance report", "url_name": "finances:transaction_list"},
+            ],
+        })
+        register_admin_sidebar_modules({
+            "id": "tools",
+            "title": "Tools",
+            "items": [
+                {"label": "System dashboard", "url_name": "admin:dashboard"},
+                {"label": "Background tasks", "url_name": "finances:transaction_list"},
+            ],
+        })

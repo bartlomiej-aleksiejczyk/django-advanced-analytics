@@ -1,33 +1,11 @@
 'use strict';
 /** Everything is the same the original version apart from the initSidebarQuickFilter function. */
 {
-        const toggleNavSidebar = document.getElementById('toggle-nav-sidebar');
-        if (toggleNavSidebar !== null) {
-            const navSidebar = document.getElementById('nav-sidebar');
-            const main = document.getElementById('main');
-            let navSidebarIsOpen = localStorage.getItem('django.admin.navSidebarIsOpen');
-            if (navSidebarIsOpen === null) {
-                navSidebarIsOpen = 'true';
-            }
-            main.classList.toggle('shifted', navSidebarIsOpen === 'true');
-            navSidebar.setAttribute('aria-expanded', navSidebarIsOpen);
-
-            toggleNavSidebar.addEventListener('click', function() {
-                if (navSidebarIsOpen === 'true') {
-                    navSidebarIsOpen = 'false';
-                } else {
-                    navSidebarIsOpen = 'true';
-                }
-                localStorage.setItem('django.admin.navSidebarIsOpen', navSidebarIsOpen);
-                main.classList.toggle('shifted');
-                navSidebar.setAttribute('aria-expanded', navSidebarIsOpen);
-            });
-        }
-
+        console.log('dupa')
         /** This method hides sidebar items and item groups. */
         function initSidebarQuickFilter() {
             const options = [];
-            const navSidebar = document.getElementById('nav-sidebar');
+            const navSidebar = document.getElementById('mrl-nav-sidebar-content');
             if (!navSidebar) {
                 return;
             }
@@ -44,22 +22,28 @@
                     filterValue = '';
                     event.target.value = ''; // clear input
                 }
-                let matches = false;
+                let isMatched = false;
+                let matches = [];
                 for (const o of options) {
                     let displayValue = '';
                     if (filterValue) {
                         if (o.title.toLowerCase().indexOf(filterValue) === -1) {
                             displayValue = 'none';
                         } else {
-                            matches = true;
+                            isMatched = true;
+                            matches.push(o);
                         }
                     }
                     // show/hide parent <TR>
                     o.node.parentNode.parentNode.style.display = displayValue;
                     o.node.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = displayValue;
-
                 }
-                if (!filterValue || matches) {
+                // IT is ugly it should hide the right things at the first time now it hides to greedly and unhides everything
+                for (const match of matches) {
+                    match.node.parentNode.parentNode.style.display = '';
+                    match.node.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = '';
+                }
+                if (!filterValue || isMatched) {
                     event.target.classList.remove('no-results');
                 } else {
                     event.target.classList.add('no-results');

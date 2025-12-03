@@ -15,44 +15,41 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 RUNSERVER = "runserver" in sys.argv
-
 if RUNSERVER:
     # -----------------------------
     # DEV SETTINGS (runserver only)
     # -----------------------------
+    # Quick-start development settings - unsuitable for production
+    # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
     DEBUG = True
     SECRET_KEY = "django-insecure-5l!6pv4po0p$oi2oq4piu=am_i(6)2+x10(ajw%5l=2-y1vcv)"
     ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+else:
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = os.environ.get("DEBUG", False) == "True"
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'sdfdsdsffsdfdsdfsfdsfdsfdsfdsfdsfds'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1']
+    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
-    'django_q',
     'common',
-    'hyperadmin',
-    'django.contrib.admin',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_q',
     'django.contrib.admindocs',
     'finances',
-    'notes'
+    'notes',
+    'hyperadmin',
+    'django.contrib.admin',
 ]
 
 MIDDLEWARE = [
@@ -213,4 +210,4 @@ CSRF_TRUSTED_ORIGINS = [
     for host in ALLOWED_HOSTS
 ]
 
-LOGIN_REDIRECT_URL='/hyperadmin/accounts/profile/'
+LOGIN_URL='admin:login'

@@ -1,0 +1,43 @@
+div.breadcrumbs {
+  height: inherit;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 0.4rem;
+}
+
+.module table {
+  width: 100%;
+}
+.object-tools {
+  margin-top: -28px;
+}
+
+.inline-group .tabular td.original p {
+  height: auto;
+}
+.responsive-container.large {
+  margin-left: var(--stt-primary-sidebar-width);
+  max-width: unset;
+}
+.submit-row a.deletelink {
+  height: 2.1875rem;
+  line-height: 0.9375rem;
+}
+@media (max-width: 768px) {
+  fieldset {
+    min-width: fit-content;
+  }
+  .responsive-container.large {
+    padding: 0;
+  }
+}
+td.delete {
+  display: flex;
+  justify-content: center;
+}
+/* This one may break a lot of things silently */
+.inline-related.tabular fieldset.module table {
+  display: block;
+  overflow: auto;
+}
