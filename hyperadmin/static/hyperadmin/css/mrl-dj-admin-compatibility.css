@@ -41,3 +41,45 @@ td.delete {
   display: block;
   overflow: auto;
 }
+.login {
+  .hyp-container {
+    background: var(--body-bg);
+    border: 1px solid var(--hairline-color);
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 20rem;
+    height: auto;
+    margin: 100px auto;
+  }
+  .responsive-container.large {
+    max-width: 20rem;
+    margin-left: unset;
+    padding: 0;
+  }
+  .stt-primary-topbar {
+    width: 20rem;
+    align-items: center;
+    display: flex;
+  }
+  #branding {
+    justify-content: center;
+    margin: auto;
+  }
+}
+
+#site,
+a:not(
+    [role="button"],
+    #header a,
+    #nav-sidebar a,
+    #content-main.app-list a,
+    .object-tools a
+  ) {
+  text-decoration: none;
+}
+
+/* TODO: ADD THIS TO CORE */
+/* #site-name a {
+  font-size: 2rem;
+  font-family: Georgia, "Liberation Serif", serif;
+} */

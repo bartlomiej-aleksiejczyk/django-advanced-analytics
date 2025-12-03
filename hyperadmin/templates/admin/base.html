@@ -1,5 +1,4 @@
-{% load admin_userlinks %}
-{% load i18n static %}
+{% load i18n static admin_userlinks %}
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}"
@@ -48,8 +47,71 @@
         data-admin-utc-offset="{% now "Z" %}">
     <a href="#content-start" class="skip-to-content-link">{% translate 'Skip to main content' %}</a>
     <!-- Container -->
-    <div>
-      {% include "hyperadmin/side_top_top_navigation.html" %}
+    <div class="hyp-container">
+      {% block header %}
+        <header class="stt-component">
+          {% if not is_popup %}
+            <div class="stt-primary-topbar">
+              <div id="branding">
+                {% block branding %}
+                {% endblock branding %}
+              </div>
+              {% block usertools %}
+                {% if has_permission %}
+                  <div id="user-tools">
+                    {% block welcome-msg %}
+                      {% translate "Welcome," %}
+                      <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+                    {% endblock welcome-msg %}
+                    {% block userlinks %}
+                      {% admin_userlinks as links %}
+                      {% for label, url in links %}<a href="{{ url }}" target="_blank">{{ label }}</a> /{% endfor %}
+                      {% if site_url %}
+                        <a href="{{ site_url }}">{% translate 'View site' %}</a> /
+                      {% endif %}
+                      {% if user.is_active and user.is_staff %}
+                        {% url 'django-admindocs-docroot' as docsroot %}
+                        {% if docsroot %}
+                          <a href="{{ docsroot }}">{% translate 'Documentation' %}</a> /
+                        {% endif %}
+                      {% endif %}
+                      {% if user.has_usable_password %}
+                        <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
+                      {% endif %}
+                      <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">{% translate 'Log out' %}</button>
+                      </form>
+                      {% include "admin/color_theme_toggle.html" %}
+                    {% endblock userlinks %}
+                  </div>
+                {% endif %}
+              {% endblock usertools %}
+            </div>
+            {% block nav-global %}
+            {% endblock nav-global %}
+          {% endif %}
+          {% if not is_popup and is_nav_sidebar_enabled %}
+            {% block nav-sidebar %}
+              {% include "admin/nav_sidebar.html" %}
+            {% endblock nav-sidebar %}
+          {% endif %}
+          {% if not is_popup %}
+            {% block nav-breadcrumbs %}
+              <nav class="stt-secondary-topbar"
+                   aria-label="{% translate 'Breadcrumbs' %}">
+                {% block breadcrumbs %}
+                  <div class="breadcrumbs">
+                    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+                    {% if title %}&rsaquo; {{ title }}{% endif %}
+                  </div>
+                {% endblock breadcrumbs %}
+              </nav>
+            {% endblock nav-breadcrumbs %}
+          {% endif %}
+        </header>
+      {% endblock %}
+      <div class="stt-overlay" data-stt-element="overlay"></div>
       <div class="responsive-container large stt-navigation-main-content"
            id="main">
         <main id="content-start" class="content" tabindex="-1">
