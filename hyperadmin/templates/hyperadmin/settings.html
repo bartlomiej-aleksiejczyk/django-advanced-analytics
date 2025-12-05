@@ -1,18 +1,47 @@
 {% extends "admin/base_site.html" %}
+{% load i18n %}
 {% block content %}
-    <div id="content" class="dashboard">
-        <h2>{{ title }}</h2>
-        <div class="module">
-            {% if user.is_active and user.is_staff %}
-                {% url 'django-admindocs-docroot' as docsroot %}
-                {% if docsroot %}
-                    <a href="{{ docsroot }}">{% translate 'Documentation' %}</a> /
-                {% endif %}
-            {% endif %}
-            {% if user.has_usable_password %}
-                <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
-            {% endif %}
+    <div class="module" id="settings-root">
+        <div class="settings-columns">
+            <div class="settings-column">
+                <h2>{% translate "Account" %}</h2>
+                <ul class="settings-list">
+                    {% if profile_url %}
+                        <li>
+                            <a href="{{ profile_url }}">{% translate "Edit profile" %}</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'admin:password_change' %}">{% translate "Change password" %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'admin:logout' %}">{% translate "Log out" %}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="settings-column">
+                <h2>{% translate "Interface" %}</h2>
+                <ul class="settings-list">
+                    <li>
+                        {% translate "Color theme" %}:
+                        {% include "admin/color_theme_toggle.html" %}
+                    </li>
+                    <li class="muted">{% translate "More appearance options coming soon\u2026" %}</li>
+                </ul>
+            </div>
+            <div class="settings-column">
+                <h2>{% translate "Help & docs" %}</h2>
+                <ul class="settings-list">
+                    {% if docsroot %}
+                        <li>
+                            <a href="{{ docsroot }}">{% translate "Django admin documentation" %}</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="mailto:support@example.com">{% translate "Report a bug" %}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 {% endblock %}
-{% include "admin/color_theme_toggle.html" %}

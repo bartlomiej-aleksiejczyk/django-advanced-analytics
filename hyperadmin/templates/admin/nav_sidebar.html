@@ -43,7 +43,7 @@
   <div class="stt-primary-sidebar___bottom-section">
     {% comment %} TODO: change site_url to dashboard settings url {% endcomment %}
     <hr>
-    <form action="{{ site_url }}">
+    <form action="{% url 'admin:settings' %}">
       <button class="stt-button stt-button---block">
         <svg xmlns="http://www.w3.org/2000/svg"
              height="28px"
@@ -54,7 +54,9 @@
         {% translate "Settings" %}
       </button>
     </form>
-    <form method="post" action="{% url 'admin:logout' %}">
+    <form method="post"
+          action="{% url 'admin:logout' %}"
+          onsubmit="return confirm('{% translate 'Are you sure you want to log out?' %}');">
       {% csrf_token %}
       <button type="submit"
               class="stt-button stt-button---block stt-button---logout">
