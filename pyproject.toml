@@ -1,5 +1,5 @@
 [project]
-name = "django-advanced-analytics"
+name = "hyperdossier"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

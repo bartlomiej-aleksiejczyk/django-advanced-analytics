@@ -56,15 +56,16 @@ def protected_media(request, relative_path: str):
 
     # --- PROD MODE -------------------------------------------------------
     # Use Nginx X-Accel-Redirect
-    internal_path = f"/hyperadmin/protected-media/{rel_for_internal.as_posix()}"
+    internal_path = f"/hyperdossier/protected-media/{rel_for_internal.as_posix()}"
 
     response = HttpResponse(content_type=content_type)
     response["X-Accel-Redirect"] = internal_path
-    response["Content-Disposition"] = f'inline; filename=\"{smart_str(requested.name)}\"'
+    response["Content-Disposition"] = f'inline; filename="{smart_str(requested.name)}"'
 
     response["Cache-Control"] = "private, max-age=3600"
 
     return response
+
 
 def health(request):
     return HttpResponse("ok")
