@@ -17,3 +17,4 @@ var/db/*
 var/logs/*
 !var/logs/.gitkeep
 .env
+.vscode

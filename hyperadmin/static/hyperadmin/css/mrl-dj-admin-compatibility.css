@@ -17,10 +17,13 @@ div.breadcrumbs {
 }
 #site-name a:link,
 #site-name a:visited {
+  margin-left: 4rem;
   color: var(--color-text-on-primary);
   margin-bottom: 0.3rem;
   font-family: Georgia, "Liberation Serif", serif;
-  font-size: xx-large;
+  font-size: 2.25rem;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 .module table {
@@ -123,23 +126,35 @@ a:not(
  */
 
 /* TODO: ADD THIS TO MRL */
-.stt-button.stt-button---block {
-  width: 95%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  font-size: large;
-  font-weight: bold;
-  color: var(--color-text-secondary);
-  border: 2;
-  padding: 0 0.2rem;
-  margin: 0.75rem auto;
-  border-radius: var(--border-radius-medium);
-  height: 2.75rem;
-  transition: outline 100 ease-in-out;
-  &:hover {
-    transition: outline 100 ease-in-out;
-    outline: 2px solid var(--color-secondary-darker);
+.stt-component {
+  .stt-button.stt-button---block {
+    cursor: pointer;
+    width: 95%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    font-size: large;
+    font-weight: bold;
+    color: var(--color-primary);
+    border: 2;
+    padding: 0 0.2rem;
+    margin: 0.75rem auto;
+    outline: 2px solid var(--color-primary);
+    height: 2.75rem;
+    transition: outline 0.3s ease;
+    &:hover {
+      transition: outline 0.3s ease;
+      svg path {
+        transition: outline 0.3s ease;
+        fill: var(--color-primary-darker);
+      }
+      outline: 2px solid var(--color-primary-darker);
+      color: var(--color-primary-darker);
+    }
+    svg path {
+      transition: outline 0.3s ease;
+      fill: var(--color-primary);
+    }
   }
 }
 .stt-button.stt-button---block.stt-button---logout {
@@ -147,12 +162,13 @@ a:not(
   color: var(--color-text-on-primary-darker);
   &:hover {
     color: var(--color-text-on-primary);
+    outline: 2px solid var(--color-primary-lighter);
+    svg path {
+      fill: var(--color-text-on-primary);
+    }
   }
   svg path {
     fill: var(--color-text-on-primary-darker);
-    &:hover {
-      fill: var(--color-text-on-primary);
-    }
   }
   svg path:hover {
     fill: var(--color-text-on-primary);

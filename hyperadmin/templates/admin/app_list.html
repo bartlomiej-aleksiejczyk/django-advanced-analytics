@@ -1,5 +1,6 @@
 {% load i18n %}
-{% if extra_modules %}
+{% comment %} TODO: disable extra modules in App view, change "module" name to extraapp  {% endcomment %}
+{% if extra_modules and not hide_extra_modules %}
   {% for module in extra_modules %}
     <div class="app-extra-{{ module.id }} module">
       <table>

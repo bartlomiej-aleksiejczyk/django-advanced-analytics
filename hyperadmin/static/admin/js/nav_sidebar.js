@@ -1,7 +1,6 @@
 'use strict';
 /** Everything is the same the original version apart from the initSidebarQuickFilter function. */
 {
-        console.log('dupa')
         /** This method hides sidebar items and item groups. */
         function initSidebarQuickFilter() {
             const options = [];
