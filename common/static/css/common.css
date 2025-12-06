@@ -1,0 +1,93 @@
+.hidden-form {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: unset;
+}
+.stt-primary-sidebar__button {
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary-darker);
+  box-shadow: none;
+  border-color: var(--color-primary-darker);
+  transition: all 0.3s ease;
+  &:hover {
+    transition: all 0.3s ease;
+    border-color: var(--color-primary-lighter);
+    box-shadow: none;
+    color: var(--color-text-on-primary);
+    svg path {
+      fill: var(--color-text-on-primary);
+    }
+  }
+  svg path {
+    fill: var(--color-text-on-primary-darker);
+  }
+}
+.stt-primary-sidebar__button.outlined {
+  color: var(--color-primary);
+  height: 2.75rem;
+  transition: outline 0.3s ease;
+  &:hover {
+    border-color: var(--color-primary-darker);
+    box-shadow: none;
+    transition: outline 0.3s ease;
+    svg path {
+      transition: outline 0.3s ease;
+      fill: var(--color-primary-darker);
+    }
+    color: var(--color-primary-darker);
+  }
+  svg path {
+    transition: outline 0.3s ease;
+    fill: var(--color-primary);
+  }
+}
+.stt-primary-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.stt-primary-sidebar___upper-section {
+  display: flex;
+  overflow: scroll;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--border-radius-medium);
+  margin: 0 auto 0.8rem auto;
+}
+.stt-primary-sidebar__list-container {
+  display: flex;
+  overflow: scroll;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--border-radius-medium);
+  margin: 0 auto;
+  position: relative;
+}
+
+.stt-primary-sidebar___bottom-section {
+  margin-bottom: 1rem;
+}
+.stt-primary-sidebar hr {
+  min-height: 2px;
+  margin-top: 0;
+}
+.stt-primary-sidebar .stt-primary-sidebar__filter {
+  margin: 0.25rem auto 0 auto;
+}
+
+.select-small-form {
+  display: flex;
+  flex-direction: row;
+  .select-small-form__submit {
+    margin: 0;
+    width: fit-content;
+    padding: 0.2rem 0.4rem;
+  }
+  .select-small-form__select {
+    margin: 0;
+    height: 100%;
+    flex-grow: 1;
+  }
+}

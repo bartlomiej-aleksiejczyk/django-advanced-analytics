@@ -4,6 +4,7 @@ from pathlib import Path
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse, Http404, HttpResponse
+from django.template.response import TemplateResponse
 from django.utils.encoding import smart_str
 from django.views.decorators.http import require_http_methods
 
@@ -69,3 +70,7 @@ def protected_media(request, relative_path: str):
 
 def health(request):
     return HttpResponse("ok")
+
+
+def layout_test(request):
+    return TemplateResponse(request, "base_layout.html")

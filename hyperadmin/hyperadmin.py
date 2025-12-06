@@ -37,7 +37,7 @@ class HyperadminSite(AdminSite):
             ),
         ]  # register_view()
         self._extra_sidebar_modules = []  # add_module()
-        self._domains = []
+        self._realms = []
         self._global_search_providers: list = []
 
     # ---------------------------------------------------------
@@ -66,8 +66,33 @@ class HyperadminSite(AdminSite):
         """
         self._extra_sidebar_modules.append(module_dict)
 
-    def add_domain(self, domain):
-        self._domains.append(domain)
+    def register_realm(
+        self,
+        name: str,
+        *,
+        context_factory=None,
+        sidebar_template: str | None = None,
+        topbar_template: str | None = None,
+        search_providers: list | None = None,
+        label: str | None = None,
+        order: int = 100,
+    ):
+        """
+        Register a 'realm' - a named variant of the admin with its own
+        sidebar/topbar templates, extra context and search providers.
+        """
+        if name in self._realms:
+            raise ValueError(f"Realm {name!r} is already registered")
+
+        self._realms[name] = {
+            "name": name,
+            "label": label or name.title(),
+            "context_factory": context_factory,
+            "sidebar_template": sidebar_template,
+            "topbar_template": topbar_template,
+            "search_providers": list(search_providers or []),
+            "order": order,
+        }
 
     def register_global_search(self, provider):
         """
@@ -245,7 +270,6 @@ class HyperadminSite(AdminSite):
             except Exception:
                 extra = []
 
-            # Expect providers to already return dicts with title/content/url
             for item in extra:
                 norm = {
                     "title": item.get("title", ""),

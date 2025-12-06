@@ -8,4 +8,5 @@ urlpatterns = [
         name="protected_media",
     ),
     path("health/", views.health, name="health"),
+    path("layout-test/", views.layout_test),
 ]

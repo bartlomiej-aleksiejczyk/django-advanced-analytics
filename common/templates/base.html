@@ -2,64 +2,53 @@
 {% load client_components_integration %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- Meta Data -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon.ico' %}">
-    {% comment %} {% load_client_components %} {% endcomment %}
-    <!-- Stylesheets -->
-    {% block meta %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bartlomiej-aleksiejczyk/markup-refine-lib@0.7.0/dist/markup-refine-lib-scoped.min.css" />
-    <script src="https://cdn.jsdelivr.net/gh/bartlomiej-aleksiejczyk/markup-refine-lib@0.7.0/dist/markup-refine-lib-javascript-attribute-components.js" /></script>
-        {% comment %} <script src=" https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js "></script>
-        <script src="https://cdn.jsdelivr.net/npm/unpoly@3.10.2/unpoly.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/unpoly@3.10.2/unpoly.min.css">     {% endcomment %}
-    {% endblock meta %}
-    <title>
-        {% block title %}
-            Offline capable notes
-        {% endblock title %}
-    </title>
-    <!-- Stylesheets -->
-    {% block stylesheets %}
-        <!-- Additional default CSS files can be added here -->
-    {% endblock stylesheets %}
-    {% block extracss %}
-        <!-- Extra CSS specific to a page can be added here -->
-    {% endblock extracss %}
-    <!-- Extra Head Content -->
-    {% block extrahead %}
-        <!-- Additional head content (e.g., scripts, meta tags) -->
-    {% endblock extrahead %}
-</head>
-<body class="hidden-until-js">
-<!-- Header -->
-{% block header %}
-    <!-- Optional header content -->
-{% endblock header %}
-<!-- Navigation Bar -->
-{% block navbar %}
-    <!-- Default navbar content -->
-{% endblock navbar %}
-<!-- Main Content -->
-<main>
-    {% block content %}
-        <!-- Page-specific content goes here -->
-    {% endblock content %}
-</main>
-<!-- Footer -->
-{% block footer %}
-    <!-- Optional footer content -->
-{% endblock footer %}
-<!-- Scripts -->
-{% block inlinecss %}
-{% endblock inlinecss %}
-
-{% block scripts %}
-{% endblock scripts %}
-{% block extrajs %}
-    <!-- Extra JavaScript specific to a page can be added here -->
-{% endblock extrajs %}
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon"
+              type="image/png"
+              sizes="16x16"
+              href="{% static 'favicon.ico' %}">
+        {% block meta %}
+            <link rel="stylesheet"
+                  href="https://cdn.jsdelivr.net/gh/bartlomiej-aleksiejczyk/markup-refine-lib@0.8.5/dist/markup-refine-lib.min.css" />
+            <script src="https://cdn.jsdelivr.net/gh/bartlomiej-aleksiejczyk/markup-refine-lib@0.8.5/dist/markup-refine-lib-javascript-attribute-components.js" /></script>
+            <link rel="stylesheet" href="{% static 'css/common.css' %}">
+        {% endblock meta %}
+        <title>
+            {% block title %}
+                Offline capable notes
+            {% endblock title %}
+        </title>
+        {% block stylesheets %}
+        {% endblock stylesheets %}
+        {% block extracss %}
+        {% endblock extracss %}
+        {% block extrahead %}
+        {% endblock extrahead %}
+    </head>
+    <body class="hidden-until-js">
+        {% block header %}
+            <header>
+                {% block topbar-primary %}
+                {% endblock topbar-primary %}
+                {% block sidebar %}
+                {% endblock sidebar %}
+                {% block topbar-secondary %}
+                {% endblock topbar-secondary %}
+            </header>
+        {% endblock header %}
+        <main>
+            {% block content %}
+            {% endblock content %}
+        </main>
+        {% block footer %}
+        {% endblock footer %}
+        {% block inlinecss %}
+        {% endblock inlinecss %}
+        {% block scripts %}
+        {% endblock scripts %}
+        {% block extrajs %}
+        {% endblock extrajs %}
+    </body>
 </html>

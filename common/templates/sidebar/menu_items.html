@@ -1,0 +1,20 @@
+{% for item in items %}
+    <li>
+        {% if item.children %}
+            <details>
+                <summary>
+                    {% if item.url %}
+                        <a href="{{ item.url }}">{{ item.label }}</a>
+                    {% else %}
+                        {{ item.label }}
+                    {% endif %}
+                </summary>
+                <ul>
+                    {% include "partials/menu_items.html" with items=item.children %}
+                </ul>
+            </details>
+        {% else %}
+            <a href="{{ item.url|default:'#' }}">{{ item.label }}</a>
+        {% endif %}
+    </li>
+{% endfor %}

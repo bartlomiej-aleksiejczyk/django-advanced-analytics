@@ -17,6 +17,15 @@
                     <li>
                         <a href="{% url 'admin:logout' %}">{% translate "Log out" %}</a>
                     </li>
+                    <li>
+                        <form class="stt-primary-sidebar__block select-small-form hidden-form">
+                            <label for="realm">Select your realm:</label>
+                            <select name="realm" id="realm-select" class=" select-small-form__select">
+                                <option value="">--Please choose an option--</option>
+                            </select>
+                            <button class="select-small-form__submit" type="button">Switch</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
             <div class="settings-column">

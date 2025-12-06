@@ -1,0 +1,90 @@
+.user-profile {
+  width: 90%;
+  margin: 0 auto;
+  font-family: system-ui, sans-serif;
+}
+
+.user-profile__details {
+  padding: 0;
+  width: 100%;
+  border: 1px solid var(--color-secondary-lighter);
+  background-color: var(--color-secondary-lighter);
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+}
+
+/* --- SUMMARY (header) --- */
+.user-profile .user-profile__summary {
+  margin-bottom: 0;
+  list-style: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+/* Remove default disclosure arrow */
+.user-profile__summary::-webkit-details-marker {
+  display: none;
+}
+
+.user-profile__summary-lines {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-profile__summary-username {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.user-profile__summary-realm {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.user-profile__summary-chevron {
+  transition: transform 0.25s ease;
+  font-size: 1rem;
+  fill: var(--color-text-primary);
+}
+
+.user-profile__details[open] .user-profile__summary-chevron {
+  transform: rotate(180deg);
+}
+
+.user-profile__content-wrapper {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+}
+
+.user-profile__details[open] .user-profile__content-wrapper {
+  max-height: 30%;
+}
+
+.user-profile__content {
+  border-top: 1px solid var(--color-secondary);
+  padding: 0;
+}
+
+.user-profile__item {
+  cursor: pointer;
+  border-radius: var(--border-radius-medium);
+}
+
+.user-profile__item a,
+.user-profile__item button {
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: inherit;
+  cursor: pointer;
+}
