@@ -200,3 +200,8 @@ LOGGING = {
 CSRF_TRUSTED_ORIGINS = [f"https://{host.strip()}" for host in ALLOWED_HOSTS]
 
 LOGIN_URL = "common:login"
+
+CLIENT_COMPONENT_SETTINGS = {
+    "MANIFEST_FILE_PATH": "client_components__dist/.vite/manifest.json",
+    "CLIENT_COMPONENTS_PATH": "client_components/",
+}

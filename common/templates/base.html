@@ -1,4 +1,4 @@
-{% load static %}
+{% load static client_components_integration %}
 {% load client_components_integration %}
 <!DOCTYPE html>
 <html lang="en">
@@ -9,11 +9,11 @@
               type="image/png"
               sizes="16x16"
               href="{% static 'favicon.ico' %}">
+        {% load_client_components %}
         {% block meta %}
             <link rel="stylesheet"
                   href="https://cdn.jsdelivr.net/gh/bartlomiej-aleksiejczyk/markup-refine-lib@0.8.6/dist/markup-refine-lib.min.css" />
             <script src="https://cdn.jsdelivr.net/gh/bartlomiej-aleksiejczyk/markup-refine-lib@0.8.6/dist/markup-refine-lib-javascript-attribute-components.js" /></script>
-            <link rel="stylesheet" href="{% static 'css/common.css' %}">
         {% endblock meta %}
         <title>
             {% block title %}

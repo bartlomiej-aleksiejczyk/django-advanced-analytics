@@ -1,0 +1,44 @@
+@import "./styles/common/common.css";
+@import "./styles/common/sidebar/user_profile_details.css";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme {
+  --color-link: #3399cc;
+  --color-link-hover: #66aaff;
+
+  --color-primary: #4e4e4e;
+  --color-primary-darker: #3f3f3f;
+  --color-primary-lighter: #777777;
+
+  --color-secondary: #666666;
+  --color-secondary-darker: #4b4b4b;
+  --color-secondary-lighter: #7a7a7a;
+
+  --color-text-primary: #dddddd;
+  --color-text-secondary: #bbbbbb;
+  --color-text-on-primary: #d3d3d3;
+
+  --color-background: #313131;
+  --color-background-light-contrast: #2a2a2a;
+
+  --color-positive-darker: #669966;
+  --color-positive: #336633;
+
+  --color-negative-darker: #c43636;
+  --color-negative: #663333;
+
+  --color-warning: #b38f4c;
+  --color-warning-darker: #996c33;
+
+  --color-info: #6699cc;
+  --color-info-darker: #4477aa;
+
+  --color-help: #595085;
+  --color-help-darker: #3c3357;
+
+  --color-main-text-area: #252525;
+  --color-main-text: #ffffff;
+}
+
+@import "./library/GlobalPopover/global-popover.css";

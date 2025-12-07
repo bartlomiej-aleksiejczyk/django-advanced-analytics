@@ -18,3 +18,32 @@ var/logs/*
 !var/logs/.gitkeep
 .env
 .vscode
+# Static files
+staticfiles/*
+
+# Vite, npm, js
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+client_components__dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
