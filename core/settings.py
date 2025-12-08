@@ -50,17 +50,18 @@ INSTALLED_APPS = [
     "infobjects",
     "hyperadmin",
     "django.contrib.admin",
+    "iommi",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "core.middleware.SimpleCORSMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "iommi.middleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -205,5 +206,5 @@ LOGIN_URL = "common:login"
 CLIENT_COMPONENT_SETTINGS = {
     "MANIFEST_FILE_PATH": "client_components__dist/.vite/manifest.json",
     "CLIENT_COMPONENTS_PATH": "client_components/",
-    "DEV_URL": "http://192.168.0.25:5173/",
+    "DEV_URL": "http://127.0.0.1:5173/",
 }
