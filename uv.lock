@@ -126,6 +126,7 @@ dependencies = [
     { name = "django" },
     { name = "docutils" },
     { name = "gunicorn" },
+    { name = "iommi" },
 ]
 
 [package.dev-dependencies]
@@ -138,10 +139,24 @@ requires-dist = [
     { name = "django", specifier = ">=6.0" },
     { name = "docutils", specifier = ">=0.22.3" },
     { name = "gunicorn", specifier = ">=23.0.0" },
+    { name = "iommi", specifier = ">=7.21.3" },
 ]
 
 [package.metadata.requires-dev]
 dev = [{ name = "djlint", specifier = ">=1.36.4" }]
+
+[[package]]
+name = "iommi"
+version = "7.21.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "pyparsing" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a1/41/43049e1ea67124538fcc9e7d76057f6b36d771fb90a50fb09888bdaa4cad/iommi-7.21.3.tar.gz", hash = "sha256:3a0feed5ed86fdca40690d91bf26d647095642f4fd1423e9bafe53b7eefc6c04", size = 214422, upload-time = "2025-12-04T10:19:37.994Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4a/d6/859a5d56ef2ccaf42bb5c629a3e648ee59ddd6e2afef258e5b01ec5acaf7/iommi-7.21.3-py2.py3-none-any.whl", hash = "sha256:ad4e9703f233d93c916c503ab212de2c8355f27fd7f34b0e89c1ed3d977eec17", size = 366644, upload-time = "2025-12-04T10:19:36.505Z" },
+]
 
 [[package]]
 name = "jsbeautifier"
@@ -181,6 +196,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/ca/bc/f35b8446f4531a7cb215605d100cd88b7ac6f44ab3fc94870c120ab3adbf/pathspec-0.12.1.tar.gz", hash = "sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712", size = 51043, upload-time = "2023-12-10T22:30:45Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cc/20/ff623b09d963f88bfde16306a54e12ee5ea43e9b597108672ff3a408aad6/pathspec-0.12.1-py3-none-any.whl", hash = "sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08", size = 31191, upload-time = "2023-12-10T22:30:43.14Z" },
+]
+
+[[package]]
+name = "pyparsing"
+version = "3.2.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f2/a5/181488fc2b9d093e3972d2a472855aae8a03f000592dbfce716a512b3359/pyparsing-3.2.5.tar.gz", hash = "sha256:2df8d5b7b2802ef88e8d016a2eb9c7aeaa923529cd251ed0fe4608275d4105b6", size = 1099274, upload-time = "2025-09-21T04:11:06.277Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/10/5e/1aa9a93198c6b64513c9d7752de7422c06402de6600a8767da1524f9570b/pyparsing-3.2.5-py3-none-any.whl", hash = "sha256:e38a4f02064cf41fe6593d328d0512495ad1f3d8a91c4f73fc401b3079a59a5e", size = 113890, upload-time = "2025-09-21T04:11:04.117Z" },
 ]
 
 [[package]]
