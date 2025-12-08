@@ -71,10 +71,6 @@ def health(request):
     return HttpResponse("ok")
 
 
-def layout_test(request):
-    return TemplateResponse(request, "base_layout.html")
-
-
 def settings_view(request):
     """
     "Settings" page inside admin, using HyperadminSite context.
