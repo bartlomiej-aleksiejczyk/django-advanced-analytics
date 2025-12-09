@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Category(models.Model):
@@ -12,6 +13,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("infobjects:category_detail", kwargs={"category_pk": self.pk})
 
 
 class Note(models.Model):
@@ -44,6 +48,9 @@ class Note(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.get_type_display()})"
+
+    def get_absolute_url(self):
+        return "/people/%i/" % self.id
 
 
 class NoteAttachment(models.Model):

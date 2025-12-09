@@ -208,3 +208,17 @@ CLIENT_COMPONENT_SETTINGS = {
     "CLIENT_COMPONENTS_PATH": "client_components/",
     "DEV_URL": "http://127.0.0.1:5173/",
 }
+from iommi import Style, Asset
+from iommi.style_bootstrap import bootstrap
+
+IOMMI_DEBUG_URL_BUILDER = lambda filename, lineno: "vscode://file/%s:" % (filename,) + (
+    "" if lineno is None else "%d" % (lineno,)
+)
+IOMMI_DEFAULT_STYLE = Style(
+    bootstrap,
+    base_template="base_layout.html",
+    # root__assets=dict(
+    #     my_project_custom_css=Asset.css(attrs__href="/static/custom.css"),
+    #     my_project_custom_js=Asset.js(attrs__src="/static/custom.js"),
+    # ),
+)

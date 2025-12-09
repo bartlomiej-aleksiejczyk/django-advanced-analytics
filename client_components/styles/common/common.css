@@ -99,3 +99,6 @@
 .stt-navigation-main-content.responsive-container.unpadded {
   padding: 0;
 } */
+.table-stretched {
+  min-width: 100%;
+}

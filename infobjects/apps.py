@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 from django.template.response import TemplateResponse
+from iommi.path import register_path_decoding
 from hyperadmin.hooks import register_admin_action, register_admin_view
 
 
@@ -31,5 +32,10 @@ class InfobjectsConfig(AppConfig):
     name = "infobjects"
 
     def ready(self):
+        from .models import Category
+
         register_admin_view("dashboard/", make_system_dashboard_view, name="dashboard")
         register_admin_action(export_everything, name="export_all")
+        register_path_decoding(
+            category_pk=Category,
+        )

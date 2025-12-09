@@ -1,5 +1,5 @@
 import json
-
+from django.template import Template
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import (
@@ -11,28 +11,75 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.views.generic.detail import SingleObjectMixin
-
+from iommi.attrs import render_attrs
+from iommi.admin import Namespace
 from .models import Category, Note
 from .forms import CategoryForm, NoteForm, NoteForm, NoteAttachmentFormSet
 
+from iommi import Action, Column, Header, Page, Form, Table, html
+from django.urls import reverse_lazy
+from .models import Category
+from .forms import CategoryForm
 
-class CategoryListCreateView(LoginRequiredMixin, ListView, CreateView):
-    model = Category
-    form_class = CategoryForm
-    template_name = "infobjects/category_list.html"
-    context_object_name = "categories"
-    success_url = reverse_lazy("infobjects:category_list")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # For ListView part, object_list is categories
-        context.setdefault("form", self.get_form())
-        return context
+def category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == "POST":
+        category.delete()
+        return redirect("category_list")
+    return render(request, "category_confirm_delete.html", {"category": category})
+
+
+class CategoryCRUDPage(Page):
+    title = Header("Manage Categories")
+    create = Form.create(
+        title="Create a new category",
+        auto__model=Category,
+        auto__include=["title"],
+        actions__submit__display_name="Add",
+        extra__redirect_to=reverse_lazy("infobjects:category_list"),
+    )
+
+    list = Table(
+        auto__model=Category,
+        title="Available Categories",
+        columns__edit=Column.edit(
+            after=0, include=lambda request, **_: request.user.is_staff
+        ),
+        attrs__class={"table-stretched": True},
+        columns__delete=Column.delete(
+            cell__template=Template(
+                '<td data-iommi-path="parts__list__columns__delete__cell" data-iommi-type="Cell" style="">'
+                '<form action="{% url "infobjects:category_delete" row.pk %}" method="post" onsubmit="return confirm(\'Are you sure to remove a category named {{row.title}}?\');" class="hidden-form">'
+                '<button type="submit" class="text-danger">'
+                '<i class="fa fa-lg fa-trash-o"></i> Delete'
+                "</button>"
+                "</form>"
+                "</td>"
+            ),
+            include=lambda request, **_: request.user.is_staff,
+        ),
+        outer__children__figure_close=html.figure(),
+        container__tag="figure",
+    )
+
+
+class CategoryUpdatePage(Page):
+    create = Form.edit(
+        actions__cancel=Action(attrs__href="../"),
+        auto__model=Category,
+        auto__include=["title"],
+        actions__submit__display_name="Add",
+        instance=lambda category_pk, **kwargs: Category.objects.filter(
+            pk=category_pk
+        ).first(),
+        extra__redirect_to=reverse_lazy("infobjects:category_list"),
+    )
 
 
 class CategoryUpdateView(LoginRequiredMixin, UpdateView):
@@ -46,9 +93,6 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     template_name = "infobjects/category_confirm_delete.html"
     success_url = reverse_lazy("infobjects:category_list")
-
-
-from django.shortcuts import get_object_or_404
 
 
 class NoteListView(LoginRequiredMixin, ListView):
