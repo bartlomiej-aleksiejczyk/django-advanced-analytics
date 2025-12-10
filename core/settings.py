@@ -45,8 +45,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'django.contrib.sitemaps',
-    "django.contrib.sites",
     "django.contrib.admindocs",
     "finances",
     "infobjects",
@@ -62,7 +60,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "iommi.middleware",
 ]
@@ -227,4 +224,3 @@ IOMMI_DEFAULT_STYLE = Style(
     #     my_project_custom_js=Asset.js(attrs__src="/static/custom.js"),
     # ),
 )
-SITE_ID = 1

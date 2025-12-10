@@ -22,11 +22,4 @@ urlpatterns = [
     ),
     path("health/", views.health, name="health"),
     path("settings/", views.settings_view, name="settings"),
-    path(
-    "sitemap.xml",
-    sitemap,
-    {"sitemaps": sitemaps},
-    name="django.contrib.sitemaps.views.sitemap",
-)
-
 ]

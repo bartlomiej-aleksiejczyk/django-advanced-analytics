@@ -35,6 +35,10 @@ urlpatterns = [
                     "api/v1/infobjects/",
                     include("infobjects.urls_api", namespace="infobjects_api"),
                 ),
+                path(
+                    "api/v1/search/",
+                    include("search.urls_api", namespace="search_api"),
+                ),
             ]
         ),
     )
