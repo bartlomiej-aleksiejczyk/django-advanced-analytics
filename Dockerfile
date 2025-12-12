@@ -1,8 +1,20 @@
-FROM python:3.12-slim
+
+FROM node:20 AS js-builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci || npm install
+
+COPY . .
+
+RUN npm run build
+
+
+FROM python:3.12-slim AS django
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    UV_PROJECT_ENVIRONMENT=/usr/local
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
@@ -19,6 +31,8 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 COPY . .
 
-EXPOSE 8000
+COPY --from=js-builder /app/client_components__dist /app/client_components__dist
+
+RUN python manage.py collectstatic --noinput
 
 CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]

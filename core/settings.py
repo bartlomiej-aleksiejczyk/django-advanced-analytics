@@ -144,7 +144,10 @@ MEDIA_URL = "/hyperdossier/files/"
 MEDIA_ROOT = os.path.join(ROOT_DIR, "var", "media")
 
 STATIC_URL = "/hyperdossier/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    BASE_DIR / "client_components__dist",
+]
 STATIC_ROOT = os.path.join(ROOT_DIR, "var", "static")
 
 Q_CLUSTER = {
@@ -207,7 +210,7 @@ LOGIN_URL = "common:login"
 CLIENT_COMPONENT_SETTINGS = {
     "MANIFEST_FILE_PATH": "client_components__dist/.vite/manifest.json",
     "CLIENT_COMPONENTS_PATH": "client_components/",
-    "DEV_URL": "http://127.0.0.1:5174/",
+    "DEV_URL": "http://127.0.0.1:5173/",
 }
 from iommi import Style, Asset, register_style
 from iommi.style_bootstrap import bootstrap
