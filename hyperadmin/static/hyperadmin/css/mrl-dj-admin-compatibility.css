@@ -254,3 +254,16 @@ a:not(
 .stt-primary-sidebar___bottom-section {
   margin-bottom: 1rem;
 }
+a.stt-primary-sidebar__back-button {
+  margin: 0.3rem 0 0 0.6rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: small;
+  font-weight: bold;
+  &:visited {
+    color: var(--color-text-secondary);
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+}

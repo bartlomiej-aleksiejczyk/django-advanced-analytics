@@ -23,10 +23,10 @@ urlpatterns = [
     path("categories/", views.CategoryListPage().as_view(), name="category_list"),
     path("categories/new/", views.CategoryCreatePage().as_view(), name="category_new"),
     # notes
-
-    path("notes/", views.NoteListView.as_view(), name="note_list"),
-    path("notes/add/", views.NoteEditView.as_view(), name="note_add"),
-    path("notes/<int:pk>/edit/", views.NoteEditView.as_view(), name="note_edit"),
-    path("note/<int:pk>/delete/", views.NoteDeleteView.as_view(), name="note_delete"),
+    path("notes/", views.NoteListPage().as_view(), name="note_list"),
+    path("notes/add/", views.NoteCreateEditView.as_view(), name="note_add"),
+    path("notes/<int:pk>/edit/", views.NoteCreateEditView.as_view(), name="note_edit"),
+    path("notes/<int:pk>/delete/", views.note_delete, name="note_delete"),
+    path("notes/integrated-editor/", views.note_editor, name="note_integrated_editor"),
     path("notes/<int:pk>/", views.NoteDetailView.as_view(), name="note_detail"),
 ]

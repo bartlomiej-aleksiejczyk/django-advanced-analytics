@@ -59,6 +59,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "iommi.middleware",
@@ -206,13 +207,14 @@ LOGIN_URL = "common:login"
 CLIENT_COMPONENT_SETTINGS = {
     "MANIFEST_FILE_PATH": "client_components__dist/.vite/manifest.json",
     "CLIENT_COMPONENTS_PATH": "client_components/",
-    "DEV_URL": "http://127.0.0.1:5173/",
+    "DEV_URL": "http://127.0.0.1:5174/",
 }
 from iommi import Style, Asset, register_style
 from iommi.style_bootstrap import bootstrap
 from iommi.style_base import base
 
 from iommi.style_vanilla_css import vanilla_css
+
 IOMMI_DEBUG_URL_BUILDER = lambda filename, lineno: "vscode://file/%s:" % (filename,) + (
     "" if lineno is None else "%d" % (lineno,)
 )

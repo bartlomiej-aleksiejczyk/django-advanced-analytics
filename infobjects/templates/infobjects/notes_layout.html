@@ -52,10 +52,26 @@
                         </button>
                     </div>
                     <div class="stt-primary-sidebar__list-container">
-                        <input type="text"
+                        <div class="stt-primary-sidebar__select">
+                            <select name="category" id="category-select" class="category-select">
+                                <option value=""
+                                        disabled
+                                        {% if not selected_category %}selected{% endif %}
+                                        hidden>- Choose a category -</option>
+                                <option value="" {% if not selected_category %}selected{% endif %}>All categories</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}"
+                                            {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
+                                        {{ category.title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input name="filter_note"
+                               type="text"
                                data-clickable-item-list-filter=""
                                class="stt-primary-sidebar__block stt-primary-sidebar__filter"
-                               placeholder="Filter menu...">
+                               placeholder="Type to filter menu...">
                         <ul class="clickable-item-list">
                             {% include "sidebar/menu_items.html" with items=menu_items %}
                         </ul>
@@ -71,3 +87,48 @@
 {% endblock header %}
 {% block content %}
 {% endblock content %}
+{% block extrajs %}
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const categorySelect = document.querySelector("#category-select");
+    const listContainer = document.querySelector(".clickable-item-list");
+
+    if (!categorySelect || !listContainer) return;
+
+    categorySelect.addEventListener("change", async (event) => {
+      const categoryId = event.target.value;
+      const baseUrl = "{% url 'infobjects:note_list' %}";
+      const url = new URL(baseUrl, window.location.origin);
+
+      if (categoryId) {
+        url.searchParams.set("category", categoryId);
+      } else {
+        url.searchParams.delete("category");
+      }
+
+      const browserUrl = new URL(window.location.href);
+      if (categoryId) {
+        browserUrl.searchParams.set("category", categoryId);
+      } else {
+        browserUrl.searchParams.delete("category");
+      }
+      window.history.replaceState(null, "", browserUrl.toString());
+
+      try {
+        const response = await fetch(url.toString(), {
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status}`);
+        }
+
+        const html = await response.text();
+        listContainer.innerHTML = html;   // replace only the list contents
+      } catch (error) {
+        console.error("Error loading filtered menu:", error);
+      }
+    });
+  });
+    </script>
+{% endblock %}

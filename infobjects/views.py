@@ -1,6 +1,8 @@
 import json
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.template import Template
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import (
@@ -33,8 +35,18 @@ def category_delete(request, category_pk) -> HttpResponseRedirect | HttpResponse
         return redirect("infobjects:category_list")
     return render(request, "category_confirm_delete.html", {"category": category})
 
+
+def note_delete(request, pk) -> HttpResponseRedirect | HttpResponse:
+    note = get_object_or_404(Note, pk=pk)
+    if request.method == "POST":
+        note.delete()
+        return redirect("infobjects:note_list")
+    return render(request, "note_confirm_delete.html", {"note": note})
+
+
 def infobjects_index(request) -> HttpResponse:
     return render(request, "infobjects/infobjects_index.html")
+
 
 class CategoryCreatePage(Page):
     create = Form.create(
@@ -44,9 +56,13 @@ class CategoryCreatePage(Page):
         actions__submit__display_name="Add",
         extra__redirect_to=reverse_lazy("infobjects:category_list"),
     )
+
     class Meta:
-        iommi_style="infobjects_style"
-        context__breadcrumbs=lambda request, **_: get_breadcrumbs_context("infobjects:category_new",{})["breadcrumbs"]
+        iommi_style = "infobjects_style"
+        context__breadcrumbs = lambda request, **_: get_breadcrumbs_context(
+            "infobjects:category_new", {}
+        )["breadcrumbs"]
+
 
 class CategoryListPage(Page):
     list = Table(
@@ -60,7 +76,7 @@ class CategoryListPage(Page):
             cell__template=Template(
                 '<td data-iommi-path="parts__list__columns__delete__cell" data-iommi-type="Cell" style="">'
                 '<form action="{% url "infobjects:category_delete" row.pk %}" method="post" onsubmit="return confirm(\'Are you sure to remove a category named {{row.title}}?\');" class="hidden-form">'
-                '{% csrf_token %}'
+                "{% csrf_token %}"
                 '<button type="submit" class="text-danger">'
                 '<i class="fa fa-lg fa-trash-o"></i> Delete'
                 "</button>"
@@ -72,9 +88,13 @@ class CategoryListPage(Page):
         outer__children__figure_close=html.figure(),
         container__tag="figure",
     )
+
     class Meta:
-        iommi_style="infobjects_style"
-        context__breadcrumbs=lambda **_: get_breadcrumbs_context("infobjects:category_list",{})["breadcrumbs"]
+        iommi_style = "infobjects_style"
+        context__breadcrumbs = lambda **_: get_breadcrumbs_context(
+            "infobjects:category_list", {}
+        )["breadcrumbs"]
+
 
 class CategoryUpdatePage(Page):
     create = Form.edit(
@@ -87,9 +107,14 @@ class CategoryUpdatePage(Page):
         ).first(),
         extra__redirect_to=reverse_lazy("infobjects:category_list"),
     )
+
     class Meta:
-        iommi_style="infobjects_style"
-        context__breadcrumbs=lambda request, category_pk, **_: get_breadcrumbs_context("infobjects:category_edit",{"category_pk": category_pk})["breadcrumbs"]
+        iommi_style = "infobjects_style"
+        context__breadcrumbs = (
+            lambda request, category_pk, **_: get_breadcrumbs_context(
+                "infobjects:category_edit", {"category_pk": category_pk}
+            )["breadcrumbs"]
+        )
 
 
 class CategoryUpdateView(LoginRequiredMixin, UpdateView):
@@ -98,46 +123,73 @@ class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "infobjects/category_form.html"
     success_url = reverse_lazy("infobjects:category_list")
 
+
 class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     template_name = "infobjects/category_confirm_delete.html"
     success_url = reverse_lazy("infobjects:category_list")
 
-class NoteListView(LoginRequiredMixin, ListView):
-    model = Note
-    template_name = "infobjects/note_list.html"
-    context_object_name = "notes"
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        category_id = self.request.GET.get("category")
-        if category_id:
-            qs = qs.filter(category_id=category_id)
-        return qs.select_related("category")
+def map_notes_to_menu_items(notes):
+    """
+    Convert a list/queryset of Note objects into sidebar menu items format.
 
-class NoteCreateView(LoginRequiredMixin, CreateView):
-    model = Note
-    form_class = NoteForm
-    template_name = "infobjects/note_form.html"
+    Expected output structure:
 
-    def get_success_url(self):
-        return reverse_lazy("infobjects:note_edit", args=[self.object.pk])
+    [
+        {"label": ..., "url": ..., "children": []},
+        ...
+    ]
+    """
 
-class NoteUpdateView(LoginRequiredMixin, UpdateView):
-    model = Note
-    form_class = NoteForm
-    template_name = "infobjects/note_form.html"
+    items = []
 
-    def get_success_url(self):
-        return reverse_lazy("infobjects:note_edit", args=[self.object.pk])
+    for note in notes:
+        items.append(
+            {
+                "label": note.title,
+                "url": note.get_absolute_url(),
+                "children": [],
+            }
+        )
 
-class NoteEditView(LoginRequiredMixin, View):
+    return items
+
+
+def note_list(request):
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        html = render_to_string(
+            "sidebar/menu_items.html",
+            get_sidebar_context(request),
+            request=request,
+        )
+        print(html)
+
+        return HttpResponse(html)
+    notes = Note.objects.select_related("category").all()
+
+    category_id = request.GET.get("category")
+    if category_id:
+        notes = notes.filter(category_id=category_id)
+
+    context = {
+        "notes": notes,
+    }
+    return render(request, "infobjects/note_list.html", context)
+
+
+def note_editor(request):
+    context = get_sidebar_context(request)
+    return render(request, "infobjects/note_detail.html", context)
+
+
+class NoteCreateEditView(View):
     """
     Create or edit a Note with inline attachments (no autosave here).
     Uses NoteForm + NoteAttachmentFormSet, similar to Django admin inlines.
     """
 
-    template_name = "infobjects/note_edit.html"
+    template_name = "infobjects/note_form.html"
     form_class = NoteForm
     formset_class = NoteAttachmentFormSet
 
@@ -148,13 +200,19 @@ class NoteEditView(LoginRequiredMixin, View):
         return None
 
     def get(self, request, *args, **kwargs):
+
         note = self.get_object()
         form = self.form_class(instance=note)
         formset = self.formset_class(instance=note)
         return render(
             request,
             self.template_name,
-            {"form": form, "formset": formset, "note": note},
+            {
+                "form": form,
+                "formset": formset,
+                "note": note,
+                **get_sidebar_context(request),
+            },
         )
 
     def post(self, request, *args, **kwargs):
@@ -178,10 +236,38 @@ class NoteEditView(LoginRequiredMixin, View):
             {"form": form, "formset": formset, "note": note},
         )
 
+
+def get_sidebar_context(request, **kwargs):
+    context = {}
+
+    category_id = request.GET.get("category", "")
+
+    context["categories"] = Category.objects.order_by("title")
+    context["selected_category"] = category_id
+
+    if category_id:
+        notes = Note.objects.filter(Q(category_id=category_id)).select_related(
+            "category"
+        )
+    else:
+        notes = Note.objects.select_related("category")
+
+    context["menu_items"] = map_notes_to_menu_items(notes)
+
+    return context
+
+
 class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
     template_name = "infobjects/note_detail.html"
     context_object_name = "note"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(get_sidebar_context(self.request))
+
+        return context
+
 
 class NoteDetailViewApi(LoginRequiredMixin, SingleObjectMixin, View):
     """
@@ -263,7 +349,38 @@ class NoteDetailViewApi(LoginRequiredMixin, SingleObjectMixin, View):
 
         return JsonResponse({"status": "ok", "updated_at": note.updated_at.isoformat()})
 
-class NoteDeleteView(LoginRequiredMixin, DeleteView):
+
+class NoteDeleteView(DeleteView):
     model = Note
     template_name = "infobjects/note_confirm_delete.html"
     success_url = reverse_lazy("infobjects:note_list")
+
+
+class NoteListPage(Page):
+    list = Table(
+        auto__model=Note,
+        auto__exclude=["content"],
+        columns__edit=Column.edit(after=0),
+        attrs__class={"table-stretched": True},
+        columns__delete=Column.delete(
+            cell__template=Template(
+                '<td data-iommi-path="parts__list__columns__delete__cell" data-iommi-type="Cell" style="">'
+                '<form action="{% url "infobjects:note_delete" row.pk %}" method="post" onsubmit="return confirm(\'Are you sure to remove a note named {{row.title}}?\');" class="hidden-form">'
+                "{% csrf_token %}"
+                '<button type="submit" class="text-danger">'
+                '<i class="fa fa-lg fa-trash-o"></i> Delete'
+                "</button>"
+                "</form>"
+                "</td>"
+            ),
+            include=lambda request, **_: request.user.is_staff,
+        ),
+        outer__children__figure_close=html.figure(),
+        container__tag="figure",
+    )
+
+    class Meta:
+        iommi_style = "infobjects_style"
+        context__breadcrumbs = lambda request, **_: get_breadcrumbs_context(
+            "infobjects:notel_list", {}
+        )["breadcrumbs"]

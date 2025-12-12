@@ -5,6 +5,8 @@
 </nav> {% endcomment %}
 <div class="stt-primary-sidebar " data-stt-element="sidebar">
   <div class="stt-primary-sidebar___upper-section">
+    <a class="stt-primary-sidebar__back-button"
+       href="{% url 'common:home_index' %}">← Back to Home</a>
     <div>
       {% block usertools %}
         {% if has_permission %}

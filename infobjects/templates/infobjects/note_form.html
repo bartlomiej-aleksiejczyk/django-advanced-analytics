@@ -1,76 +1,73 @@
-{% extends "infobjects/notes_layout.html" %}
+{% extends "infobjects/infobjects_layout.html" %}
+{% block topbar-secondary %}
+{% endblock topbar-secondary %}
 {% block content %}
-  <form method="post" id="note-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-  </form>
-  <p id="autosave-status"></p>
-  <script>
-  const form = document.getElementById("note-form");
-  const textarea = form.querySelector("textarea[name='content']");
-  const titleInput = form.querySelector("input[name='title']");
-  const typeSelect = form.querySelector("select[name='type']");
-  const categorySelect = form.querySelector("select[name='category']");
-  const statusEl = document.getElementById("autosave-status");
-
-  let autosaveTimer = null;
-
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.startsWith(name + "=")) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-  const csrftoken = getCookie("csrftoken");
-
-  function autosave() {
-    const url = "{% url 'infobjects:note_detail' object.pk %}";  // UpdateView passes object
-    const payload = {
-      title: titleInput.value,
-      content: textarea.value,
-      type: typeSelect.value,
-      category: categorySelect.value || null,
-    };
-
-    statusEl.textContent = "Saving…";
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "ok") {
-          statusEl.textContent = "Saved at " + new Date().toLocaleTimeString();
-        } else {
-          statusEl.textContent = "Autosave error";
-        }
-      })
-      .catch(() => {
-        statusEl.textContent = "Autosave failed";
-      });
-  }
-
-  function scheduleAutosave() {
-    clearTimeout(autosaveTimer);
-    autosaveTimer = setTimeout(autosave, 600); // 600ms after last keystroke
-  }
-
-  textarea.addEventListener("input", scheduleAutosave);
-  titleInput.addEventListener("input", scheduleAutosave);
-  typeSelect.addEventListener("change", autosave);
-  categorySelect.addEventListener("change", autosave);
-  </script>
+    <h1>
+        {% if note %}
+            Edit note
+        {% else %}
+            Create note
+        {% endif %}
+    </h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Note</legend>
+            {{ form.non_field_errors }}
+            <div>
+                {{ form.title.label_tag }}
+                {{ form.title }}
+                {{ form.title.errors }}
+            </div>
+            <div>
+                {{ form.type.label_tag }}
+                {{ form.type }}
+                {{ form.type.errors }}
+            </div>
+            <div>
+                {{ form.category.label_tag }}
+                {{ form.category }}
+                {{ form.category.errors }}
+            </div>
+            <div>
+                {{ form.content.label_tag }}
+                {{ form.content }}
+                {{ form.content.errors }}
+            </div>
+        </fieldset>
+        <fieldset style="margin-top: 2rem;">
+            <legend>Attachments</legend>
+            {{ formset.management_form }}
+            {% for f in formset %}
+                <div style="border: 1px solid #ddd;
+                            padding: 0.5rem;
+                            margin-bottom: 0.5rem">
+                    {{ f.non_field_errors }}
+                    <div>
+                        {{ f.file.label_tag }}
+                        {{ f.file }}
+                        {{ f.file.errors }}
+                    </div>
+                    <div>
+                        {{ f.original_name.label_tag }}
+                        {{ f.original_name }}
+                        {{ f.original_name.errors }}
+                    </div>
+                    <div>
+                        {{ f.mime_type.label_tag }}
+                        {{ f.mime_type }}
+                        {{ f.mime_type.errors }}
+                    </div>
+                    {% if f.instance.pk %}<div>{{ f.DELETE }} {{ f.DELETE.label_tag }}  {# can_delete=True #}</div>{% endif %}
+                </div>
+            {% endfor %}
+            <p>
+                <em>Use the empty row at the bottom to add a new attachment.</em>
+            </p>
+        </fieldset>
+        <button type="submit">Save</button>
+        {% if note %}
+            <a href="{% url 'infobjects:note_detail' note.pk %}">Back to detail</a>
+        {% endif %}
+    </form>
 {% endblock content %}

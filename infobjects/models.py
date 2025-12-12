@@ -50,7 +50,7 @@ class Note(models.Model):
         return f"{self.title} ({self.get_type_display()})"
 
     def get_absolute_url(self):
-        return "/people/%i/" % self.id
+        return reverse("infobjects:note_detail", kwargs={"pk": self.pk})
 
 
 class NoteAttachment(models.Model):
