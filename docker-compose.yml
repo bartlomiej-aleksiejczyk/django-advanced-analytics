@@ -36,10 +36,9 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
 
-      - "traefik.http.routers.hyperdossier.rule=Host(`vmrt.aln.ovh`)"
+      - "traefik.http.routers.hyperdossier.rule=PathPrefix(`/hyperdossier`)"
       - "traefik.http.routers.hyperdossier.entrypoints=websecure"
       - "traefik.http.routers.hyperdossier.tls=true"
-      - "traefik.http.routers.hyperdossier.tls.store=vmrt"
 
       - "traefik.http.routers.hyperdossier.service=hyperdossier"
       - "traefik.http.services.hyperdossier.loadbalancer.server.port=80"
