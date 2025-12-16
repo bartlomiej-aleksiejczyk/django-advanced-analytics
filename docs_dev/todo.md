@@ -1,0 +1,3 @@
+- refine navigation
+- detail notes in uinitnuitive
+- add realm concept that can conenct entities out of heirarchy
