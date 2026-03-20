@@ -31,6 +31,7 @@ urlpatterns = [
                 path("", include("common.urls", namespace="common")),
                 path("finances/", include("finances.urls", namespace="finances")),
                 path("infobjects/", include("infobjects.urls", namespace="infobjects")),
+                path("wellness/", include("wellness.urls", namespace="wellness")),
                 path(
                     "api/v1/infobjects/",
                     include("infobjects.urls_api", namespace="infobjects_api"),

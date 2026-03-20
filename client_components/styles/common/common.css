@@ -9,6 +9,7 @@
   background-color: var(--color-primary);
   color: var(--color-text-on-primary-darker);
   box-shadow: none;
+  height: 2.75rem;
   border-color: var(--color-primary-darker);
   transition: all 0.3s ease;
   &:hover {

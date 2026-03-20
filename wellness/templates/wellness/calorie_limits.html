@@ -1,0 +1,59 @@
+{% extends "wellness/wellness_layout.html" %}
+{% block topbar-secondary %}
+{% endblock topbar-secondary %}
+{% block content %}
+    <h1>Calorie Limits</h1>
+
+    <p>
+        <a href="{% url 'wellness:calorie_tracker' %}">Go to tracker</a>
+    </p>
+
+    <h3>Add limit</h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_limit">
+        {{ add_form.as_p }}
+        <button type="submit">Add</button>
+    </form>
+
+    {% if edit_form and edit_limit %}
+        <hr>
+        <h3>Edit limit</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="edit_limit">
+            <input type="hidden" name="limit_id" value="{{ edit_limit.id }}">
+            {{ edit_form.as_p }}
+            <button type="submit">Save changes</button>
+            <a href="{% url 'wellness:calorie_limits' %}">Cancel</a>
+        </form>
+    {% endif %}
+
+    <hr>
+
+    <h3>Existing limits</h3>
+
+    {% if limits %}
+        <ul>
+            {% for limit in limits %}
+                <li>
+                    {{ limit.start_date }} - {{ limit.end_date }}:
+                    {{ limit.calories_per_day }} kcal
+                    |
+                    <a href="{% url 'wellness:calorie_limits' %}?edit={{ limit.id }}">Edit</a>
+
+                    <form method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_limit">
+                        <input type="hidden" name="limit_id" value="{{ limit.id }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No limits yet.</p>
+    {% endif %}
+
+
+{% endblock content %}

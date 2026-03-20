@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.admindocs",
     "finances",
     "infobjects",
+    "wellness",
     "hyperadmin",
     "django.contrib.admin",
     "iommi",

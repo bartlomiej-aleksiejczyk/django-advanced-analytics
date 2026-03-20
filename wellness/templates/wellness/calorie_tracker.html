@@ -1,0 +1,85 @@
+{% extends "wellness/wellness_layout.html" %}
+{% block topbar-secondary %}
+{% endblock topbar-secondary %}
+{% block content %}
+<h1>Calorie Tracker</h1>
+
+    <p>
+        <a href="{% url 'wellness:calorie_limits' %}">Go to limits</a>
+    </p>
+
+    <h2>{{ selected_day }}</h2>
+
+    <p>
+        <a href="{% url 'wellness:calorie_tracker' %}?day={{ previous_day|date:'Y-m-d' }}">Previous day</a>
+        |
+        <a href="{% url 'wellness:calorie_tracker' %}?day={% now 'Y-m-d' %}">Today</a>
+        |
+        <a href="{% url 'wellness:calorie_tracker' %}?day={{ next_day|date:'Y-m-d' }}">Next day</a>
+    </p>
+
+    <form method="get">
+        <label for="day">Choose day:</label>
+        <input type="date" name="day" id="day" value="{{ selected_day|date:'Y-m-d' }}">
+        <button type="submit">Open</button>
+    </form>
+
+    <hr>
+
+    <h3>Total: {{ total_calories }} kcal</h3>
+
+    {% if active_limit %}
+        <p>Limit: {{ active_limit.calories_per_day }} kcal</p>
+        <p>Remaining: {{ remaining_calories }} kcal</p>
+    {% else %}
+        <p>No active calorie limit for this day.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Add meal</h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_meal">
+        {{ add_form.as_p }}
+        <button type="submit">Add</button>
+    </form>
+
+    {% if edit_form and edit_meal %}
+        <hr>
+        <h3>Edit meal</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="edit_meal">
+            <input type="hidden" name="meal_id" value="{{ edit_meal.id }}">
+            {{ edit_form.as_p }}
+            <button type="submit">Save changes</button>
+            <a href="{% url 'wellness:calorie_tracker' %}?day={{ selected_day|date:'Y-m-d' }}">Cancel</a>
+        </form>
+    {% endif %}
+
+    <hr>
+
+    <h3>Meals</h3>
+
+    {% if meals %}
+        <ul>
+            {% for meal in meals %}
+                <li>
+                    <strong>{{ meal.name }}</strong> {{ meal.calories }} kcal
+                    |
+                    <a href="{% url 'wellness:calorie_tracker' %}?day={{ selected_day|date:'Y-m-d' }}&edit={{ meal.id }}">Edit</a>
+
+                    <form method="post" style="display:inline;" class="hidden-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_meal">
+                        <input type="hidden" name="meal_id" value="{{ meal.id }}">
+                        <button type="submit" style="width: unset; padding:unset; font-size:unset;">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No meals for this day.</p>
+    {% endif %}
+{% endblock content %}
